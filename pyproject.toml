@@ -1,7 +1,37 @@
 [project]
 name = "smart-weather"
 version = "0.1.0"
-description = "Add your description here"
+description = "Smart weather CLI"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "aiofiles>=24.1.0",
+    "loguru>=0.7.3",
+    "orjson>=3.10.15",
+    "pydantic-ai>=0.0.39",
+    "python-dotenv>=1.0.1",
+]
+authors = [{ name = "Dmitrii K", email = "dmitriik@proton.me" }]
+license = { text = "MIT" }
+keywords = ["CLI", "summarize", "text extraction", "web scraping"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Utilities",
+]
+
+[dependency-groups]
+dev = ["mypy>=1.15.0", "ruff>=0.11.0", "types-aiofiles>=24.1.0.20241221"]
+
+[project.scripts]
+smart-weather = "smart_weather.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/dmitriiweb/smart-weather"
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
