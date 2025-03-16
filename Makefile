@@ -5,5 +5,5 @@ format:
 
 .PHONY lint:
 lint:
-	ruff check smart_weather --fix
+	ruff check smart_weather
 	mypy smart_weather
