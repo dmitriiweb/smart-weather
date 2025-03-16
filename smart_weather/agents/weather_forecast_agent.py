@@ -1,3 +1,4 @@
+import datetime as dt
 from dataclasses import dataclass
 
 import httpx
@@ -13,6 +14,7 @@ from smart_weather import config
 class Deps:
     client: httpx.AsyncClient
     api_key: str
+    time_now: str = dt.datetime.now().strftime("%H:%M")
 
 
 ollama_model = OpenAIModel(
@@ -29,9 +31,15 @@ agent = Agent(
         "Start your response with the location name. "
         "Provide a brief weather description using only the metric system. "
         "Use only the data from the OpenWeather API response. "
+        "Consider time of day. "
     ),
     retries=2,
 )
+
+
+@agent.system_prompt
+async def add_time_now(ctx: RunContext[Deps]) -> str:
+    return f"Now is {ctx.deps.time_now}"
 
 
 @agent.tool
