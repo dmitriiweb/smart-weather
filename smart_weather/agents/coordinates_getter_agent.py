@@ -3,7 +3,7 @@ from pathlib import Path
 
 import aiofiles
 import httpx
-import orjson
+import json
 from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.providers.openai import OpenAIProvider
@@ -56,7 +56,9 @@ async def get_coordinates_from_api(
     response = await client.get(url)
     # logger.debug(f"{response.json()}")
     res = response.json()
-    return schema.Coordinates(latitude=res[0]["lat"], longitude=res[0]["lon"])
+    result = schema.Coordinates(latitude=res[0]["lat"], longitude=res[0]["lon"])
+    await update_cache(user_location, result, ctx.deps.json_path)
+    return result
 
 
 @agent.tool
@@ -78,7 +80,7 @@ async def get_coordinates_from_cache(
         return None
     async with aiofiles.open(file_path, mode="r") as f:
         content = await f.read()
-        cache = orjson.loads(content)
+        cache = json.loads(content)
 
     if user_location in cache:
         coordinates = cache[user_location]
@@ -86,3 +88,23 @@ async def get_coordinates_from_cache(
             latitude=coordinates["lat"], longitude=coordinates["lon"]
         )
     return None
+
+
+async def update_cache(location: str, coordinates: schema.Coordinates, file_path: Path) -> None:
+    """Update the cache with the new coordinates
+
+    Args:
+        location: The location to update in the cache
+        coordinates: The latitude and longitude to update in the cache
+        file_path: The path to the json file
+    """
+    cache = {}
+    if file_path.exists():
+        async with aiofiles.open(file_path, mode="r") as f:
+            content = await f.read()
+            cache = json.loads(content)
+
+    cache[location] = {"lat": coordinates.latitude, "lon": coordinates.longitude}
+
+    async with aiofiles.open(file_path, mode="w") as f:
+        await f.write(json.dumps(cache))
