@@ -1,9 +1,9 @@
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
 import aiofiles
 import httpx
-import json
 from pydantic_ai import Agent, RunContext
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.providers.openai import OpenAIProvider
@@ -90,7 +90,9 @@ async def get_coordinates_from_cache(
     return None
 
 
-async def update_cache(location: str, coordinates: schema.Coordinates, file_path: Path) -> None:
+async def update_cache(
+    location: str, coordinates: schema.Coordinates, file_path: Path
+) -> None:
     """Update the cache with the new coordinates
 
     Args:
