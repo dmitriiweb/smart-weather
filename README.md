@@ -27,4 +27,4 @@ smart-weather -l "your location here"
 
 this is example of usage of smart-weather with local installation of Ollama (qwwen 2.5 7b)
 
-[!](https://github.com/dmitriiweb/smart-weather/blob/main/smart-weather.png?raw=true)
+![](https://github.com/dmitriiweb/smart-weather/blob/main/smart-weather.png?raw=true)
